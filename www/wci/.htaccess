@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	RewriteBase /wci
+
+	RewriteCond $1 !^(index\.php|images|data|include|trac|MyAdmin|robots\.txt)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	RewriteRule ^(.*)$ /wci/index.php/$1 [L]
+</IfModule>

@@ -1,0 +1,121 @@
+{%  extends 'base.html' %}
+{% block external_top %}
+
+	<script type="text/javascript">
+	var friend_id = "";
+		function get_title(){
+			
+			var url = "http://nfc.hoksi.wo.tc:8080/ci/?c=chat&m=get_room&id={{room}}&user_id={{id}}";
+			$.ajax({
+			    url : url,
+			    dataType : "jsonp",
+			    jsonp : "callback",
+			    success : function(d){
+			    	friend_id = JSON.parse(d)[0].id;
+			   		setInterval("get_msg(friend_id)", 500);
+			    }
+			});
+
+		}
+
+		function layout(){
+			$("#message").css('bottom');
+		}
+		function get_msg(idx){
+			var friend_template_head = "<div class='friend_message'>";
+			var friend_template_img_head = "<img src='" ;
+			var friend_template_img_tail = "' style='width:60px;height:60px;margin-right:11px;padding-left:9px;margin-top:19px;float:left'/>";
+			
+			var friend_template_tail = "</div><div style='clear:both'></div>";
+			var url = "http://nfc.hoksi.wo.tc:8080/ci/?c=chat&m=get_msg&id="+idx;
+			$.ajax({
+			    url : url,
+			    dataType : "jsonp",
+			    jsonp : "callback",
+			    success : function(d){
+			    	if(JSON.parse(d)[0]){
+			    		var txt = JSON.parse(d)[0].msg;
+			    		var profile = JSON.parse(d)[0].profile_pic;
+			    		$("#window").append( friend_template_img_head+profile+friend_template_img_tail+friend_template_head+ txt +friend_template_tail);
+			    		$(".window").scrollTop($('html,body').height()*10);
+			    	}
+			    }
+			});
+		}
+		$(function(){
+
+			//친구 메시지 
+			function send_meg(call){
+				var my_template_head = "<div class='my_message'>";
+				var my_template_tail = "</div><div style='clear:both'></div>";
+				//콜 받고 true 넘어오면 append
+				var url = "http://nfc.hoksi.wo.tc:8080/ci/?c=chat&m=set_msg";
+				var data = {
+					'id': '{{id}}',
+					'msg':call.val()
+				}
+				$.ajax({
+				    url : url,
+				    //dataType : "jsonp",
+				    type: "POST",
+				    data:data,
+				    //jsonp : "callback",
+				    success : function(d){
+				        //$("#window").append(my_template_head+data.msg+ my_template_tail);
+				    },
+
+				});
+				//alert(data.msg);
+				$("#window").append(my_template_head+data.msg+my_template_tail);
+				$("#window div:first-child").css("margin-top",$("#window").height()-($("#window").height()*10/100));
+				//$("#window").scrollTop($('html,body').height());
+				//$("#window").animate({ scrollTop: $(document).height() }, "50");
+				$('#window').animate({scrollTop:$("#window").height()}, 'slow');
+
+				//$("#window").scrollTop(10);
+				//$('#window').animate({scrollTop : });
+				call.val('');	
+			}
+
+			
+			
+			$('#chat').live('keypress', function(e) {
+			    if (e.which == 13) {
+			    	var chat =$(this).val();
+			    	send_meg($(this));
+			    }	
+			    
+			});
+			$("#window").css("height",$(window).height()-($(window).height()*25/100) +"px");
+			get_title();
+			
+		});
+	</script>
+	<style type="text/css">
+		*{margin:0;padding:0;background: #f2f2f2}
+		#chat_wrap{background: #f2f2f2}
+		.window {width:100%;padding-bottom:20px;overflow-y:auto ;background: #f2f2f2}
+		.friend_message {float:left;border:0;padding:9px ;color:#110712;margin-top:30px;margin-bottom:20px;background:#fff;margin-left: 9px;;background:url('/images/f_box.png') no-repeat left top #fff;}
+		.my_message {float:right;border:0px;padding:9px 28px 9px 9px;margin-right:16px;color:#110712;margin-bottom:20px;background:url('/images/box.png') no-repeat right top #fff;}
+		/*#message{width:100%;position: absolute;bottom:0;left:0;}*/
+		#message{background: #b5b5b5;padding:3%;}
+		.header{position: fixed;width:100%;height:100px;z-index: 10000;top:0;left:0;right:0;overflow: visible;}
+	</style>
+
+{% endblock %}
+{% block external %}
+<div id="chat_wrap">
+	<div id="header">
+		<img src="/images/chat_header.png" style="width:100%;float:left" />
+		<img src="/images/subBar_chat_0{{id}}.png" style="width:100%;float:left"/>
+		<div style="background:#b5b5b5;color:#fff;width:95%;margin:0 auto;margin-left:9px;margin-top:17px">하늘소님께 화살을 날렸습니다.</div>
+		<div style="clear:both"></div>
+	</div>
+	<div id="window" class="window">
+		
+	</div>
+	<div id="message">
+		<input type="text" id="chat" name="chat" style="width:94%;padding:5px 10px;color:#7F8C8D;border:1px solid #a0a0a0"/>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{%  extends 'base.html' %}
+
+{% block external_top %}
+<style type="text/css">
+*{margin: 0;padding:0;}
+
+/*
+#touchSlider { width:100%; min-height:200px; margin:0 auto; background:#ccc; position:relative; overflow:hidden; }
+#touchSlider ul { width:99999px; min-height:100%; position:absolute; top:0; left:0; overflow:hidden; }
+#touchSlider ul li { float:left; width:100%; min-height:100%; background:#9C9; font-size:14px; color:#fff; }
+*/
+.bg {
+width: 100%;
+position: absolute;
+top: 0;
+left: 0;
+z-index: 5000;
+}
+#button_wrap{background:transparent;position:absolute;top:0;left:0;z-index:9999;width:100%;height:400px;display:none}
+ .button_area{position: absolute;background:url('./');display: block;cursor: pointer;}
+   .mobile{position: relative;width:100%;margin:0 auto;}
+</style>
+
+<script src="http://dohoons.com/test/flick/jquery.touchSlider.js"></script>
+<script src="http://dohoons.com/test/flick/jquery.event.drag-1.5.min.js"></script>
+<script src="/script/jquery.form.js"></script>
+<script>
+
+function setResponsiveFactory(simbole,x,y,size_width,size_height,type){
+    var i = 480;//이미지 사이즈 가로
+    var j = 800;//이미지 사이즈 세로
+    var width = $(window).width();   //현재 브라우저 가로사이즈
+    var height = $(window).height(); // 현재 브라우저 세로사이즈
+    var temp_X = (x*width)/i;
+    var img_y = (j*width)/i;//이미지의 전체길이
+    var temp_y = (y*height)/j;
+    var profile_img_width = (size_width*width)/i;
+    var profile_img_height = (size_height*height)/j;
+    
+	simbole.css("left",parseInt(temp_X));
+	simbole.css("top",parseInt(temp_y));
+	simbole.css("width",parseInt(profile_img_width));
+	simbole.css("height",parseInt(profile_img_height));
+  }
+
+  function layout(){
+    /* 브라우저크기 인식 버그(?)로 인하여 메소드를 두번 호출해야 첫번째 부터 리사이징이 잘됨*/
+    for(var i=0;i<=1;i++){
+      setResponsiveFactory($("#boy"),168,223,100,100,"mobile");
+      setResponsiveFactory($("#girl"),288,223,100,100,"mobile");
+      setResponsiveFactory($("#img_upload"),168,372,120,120,"mobile");
+      setResponsiveFactory($("#submit"),40,602,400,64,"mobile");      
+    }
+  }
+
+$(function(){
+
+	window.onresize = function(event) {
+      $(".bg").css("height",$(window).height());
+      $("#button_wrap").css("height",$(window).height());
+      layout();
+    }
+    layout();
+     $("#button_wrap").css("height",$(window).height());
+	$(".bg").css("height",$(window).height());
+	$("#touchSlider").touchSlider({
+		flexible : true,
+		btn_prev : $("#touchSlider").next().find(".btn_prev"),
+		btn_next : $("#touchSlider").next().find(".btn_next"),
+		counter : function (e) {
+			$("#count").html("current : " + e.current + ", total : " + e.total);
+			console.log(e.current);
+			if(e.current==3){
+				$("#button_wrap").show();
+				//마지막 페이지
+			}
+		}
+	});
+	var check_gender=false;
+	$(".gender").click(function(){
+		var imageUrl_m ="./images/m.png";
+		var imageUrl_w ="./images/w.png";
+		
+		var gender = $(this).attr("id");
+		if(gender=='boy'){
+			$(this).css('background-size', ''+$(this).width()+'px '+$(this).height()+'px ');
+			if(!check_gender){
+				$(this).css('background-image', 'url("' + imageUrl_m + '")');
+				$("#girl").css('background', 'transparent');
+				check_gender = true;
+			}
+		}else{
+			$(this).css('background-size', ''+$(this).width()+'px '+$(this).height()+'px ');
+			//$(this).css('background-image', 'url("' + imageUrl_w + '")');
+			if(check_gender){
+				$(this).css('background-image', 'url("' + imageUrl_w + '")');
+				$("#boy").css('background', 'transparent');
+				check_gender = false;
+			}
+		}
+
+	});
+	$("#img_upload").click(function(){
+		alert("이미지 업로드 합니다.");
+	});	
+	$("#submit").click(function(){
+		//alert("전송합니다.");
+		window.location="/main";
+	});	
+	/*
+	$("#boy").click(function(){
+		var imageUrl ="./images/m.png";
+		$(this).css('background-size', ''+$(this).width()+'px '+$(this).height()+'px ');
+		$(this).css('background-image', 'url("' + imageUrl + '")');
+	});
+	$("#girl").click(function(){
+		var imageUrl ="./images/w.png";
+		$(this).css('background-image', 'url("' + imageUrl + '") ');
+		$(this).css('background-size', ''+$(this).width()+'px '+$(this).height()+'px ');
+	});*/
+
+
+});
+</script>
+{% endblock %}
+{% block external %}
+<!--
+<div class="wrap">a
+	<div id="join_1"></div>
+</div>-->
+
+<div id="touchSlider">
+	<ul>
+		<li>
+			<img src="./images/join_1.png" class="bg" />
+		</li>
+		<li >
+			<img src="./images/join_2.png" class="bg" />
+		</li>
+		<li>
+			<img src="./images/join_3.png" class="bg" />
+			
+		</li>
+	</ul>
+</div>
+<div>
+	<img src="./images/bg.png" class="bg" style="position:absolute;top:0;left:0;z-index:1"/>
+</div>
+<div id="button_wrap" >
+				<div class="button_area gender" id="boy" style="background:transparent;"></div>
+				<div class="button_area gender" id="girl" style="background:transparent"></div>
+				<div class="button_area" id="img_upload"></div>
+				<div class="button_area" id="submit"></div>				
+			</div>
+
+<!--
+<div id="button_wrap" >
+	<div class="button_area" id="boy" style="background:#333;"></div>
+	<div class="button_area" id="girl" style="background:#333"></div>
+	<div class="button_area" id="img_upload"></div>
+	<div class="button_area" id="submit"></div>
+	
+</div>-->
+{% endblock %}

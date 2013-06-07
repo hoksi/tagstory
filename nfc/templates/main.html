@@ -1,0 +1,14 @@
+{%  extends 'base.html' %}
+
+{% block external_top %}
+<link href="/stylesheet/bootstrap.min.css" rel="stylesheet">
+<style>
+	body {margin:0px;}
+</style>
+{% endblock %}
+{% block external %}
+<div><img src="http://nfc.hoksi.wo.tc:8080/wp-content/uploads/2013/05/toolbar.png" width="100%" onclick="$('#toolbar2').show()" /></div>
+<div><img src="http://nfc.hoksi.wo.tc:8080/wp-content/uploads/2013/05/list.png" width="100%" onclick="$('#profile_win').show()"/></div>
+<div style="display:none; position: fixed; left: 0px; top: 456px; z-index: 10" id="profile_win"><img src="http://nfc.hoksi.wo.tc:8080/wp-content/uploads/2013/05/menu_bottom.png" width="100%" onclick="$('#profile_win').hide();document.location.href='http://nfc.hoksi.wo.tc/chatting/1/1/'"/></div>
+<div style="display:none; position: fixed; left: 0px; top: 0px; z-index: 10;" id="toolbar2"><img src="http://nfc.hoksi.wo.tc:8080/wp-content/uploads/2013/05/chatlist.png" width="100%" onclick="$('#toolbar2').hide();document.location.href='http://nfc.hoksi.wo.tc/chatting/1/1/'"/></div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<title>채팅 서비스</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi" />
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<!-[if lt IE 9]>
+		<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]->
+    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	{% block external_top %}
+	{% endblock %}
+</head>
+<body onload="setTimeout(function() {window.scrollTo(0,1)}, 100);">
+
+	{% block external %}
+	{% endblock %}
+
+</body>
+</html>
